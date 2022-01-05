@@ -3,7 +3,6 @@ import time
 import re
 from time import strftime
 import requests
-from tkinter import ttk
 import random
 
 TITLE_FONT = ("Helvetica", 18, "bold")
@@ -133,7 +132,8 @@ def show_cats_fact():
         btn = tk.Button(app, text='Next', command=clicked)
         btn.pack()
 
-
+# frame manager..........................................................
+# ........................................................................................................................
 class SampleApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -151,11 +151,18 @@ class SampleApp(tk.Tk):
         self.frames["StartPage"] = StartPage(parent=container, controller=self)
         self.frames["PageOne"] = PageOne(parent=container, controller=self)
         self.frames["PageTwo"] = PageTwo(parent=container, controller=self)
+        self.frames["Page3"] = PageTwo(parent=container, controller=self)
+        self.frames["Page4"] = PageTwo(parent=container, controller=self)
+        self.frames["Page5"] = PageTwo(parent=container, controller=self)
+        self.frames["Page6"] = PageTwo(parent=container, controller=self)
 
         self.frames["StartPage"].grid(row=0, column=0, sticky="nsew")
         self.frames["PageOne"].grid(row=0, column=0, sticky="nsew")
         self.frames["PageTwo"].grid(row=0, column=0, sticky="nsew")
-
+        self.frames["Page3"].grid(row=0, column=0, sticky="nsew")
+        self.frames["Page4"].grid(row=0, column=0, sticky="nsew")
+        self.frames["Page5"].grid(row=0, column=0, sticky="nsew")
+        self.frames["Page6"].grid(row=0, column=0, sticky="nsew")
         self.show_frame("StartPage")
 
     def show_frame(self, page_name):
@@ -164,6 +171,8 @@ class SampleApp(tk.Tk):
         frame.tkraise()
 
 
+# Start page/Principal page
+# ...............................................................................................
 class StartPage(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -182,7 +191,7 @@ class StartPage(tk.Frame):
         label.pack(side="top", fill="x", pady=10)
 
         button8 = tk.Button(frame4, height=4, width=15, bg='#fdb9e0', text="WIKIPEDIA",
-                            command=lambda: controller.show_frame("PageOne"))
+                            command=lambda: controller.show_frame("PageTwo"))
         button8.grid(row=0, column=2, padx=25, pady=25)
 
         button2 = tk.Button(frame4, height=4, width=15, bg='#fdb9e0', text="Cats",
@@ -190,19 +199,19 @@ class StartPage(tk.Frame):
         button2.grid(row=0, column=3, padx=25, pady=25)
 
         button3 = tk.Button(frame4, height=4, width=15, bg='#fdb9e0', text="ANIMALS",
-                            command=lambda: controller.show_frame("PageOne"))
+                            command=lambda: controller.show_frame("Page3"))
         button3.grid(row=0, column=4, padx=25, pady=25)
 
         button5 = tk.Button(frame4, height=4, width=15, bg='#cd9de2', text="ANIMATION",
-                            command=lambda: controller.show_frame("PageOne"))
+                            command=lambda: controller.show_frame("Page4"))
         button5.grid(row=1, column=2, padx=25, pady=25)
 
         button6 = tk.Button(frame4, height=4, width=15, bg='#cd9de2', text="FRUITS",
-                            command=lambda: controller.show_frame("PageOne"))
+                            command=lambda: controller.show_frame("Page5"))
         button6.grid(row=1, column=3, padx=25, pady=25)
 
         button7 = tk.Button(frame4, height=4, width=15, bg='#cd9de2', text="CARS",
-                            command=lambda: controller.show_frame("PageOne"))
+                            command=lambda: controller.show_frame("Page6"))
         button7.grid(row=1, column=4, padx=25, pady=25)
 
         button1 = tk.Button(frame5, height=2, width=20, text='Close', command=close)
@@ -210,7 +219,8 @@ class StartPage(tk.Frame):
 
         self._canvas.pack()
 
-
+# Fact about  cats
+# ...............................................................................................................
 class PageOne(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -220,11 +230,11 @@ class PageOne(tk.Frame):
         frame7.place(relx=0.5, rely=0.2, relwidth=0.75, relheight=0.5, anchor='n')
         frame6 = tk.Frame(self, bg='#80c1ff', bd=5)
         frame6.place(relx=0.5, rely=0.85, relwidth=0.75, relheight=0.5, anchor='n')
-        label = tk.Label(self, text="This is page 1", font=TITLE_FONT)
+        label = tk.Label(self, text="Cats facts", font=TITLE_FONT)
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(frame6, height=2, width=20, text="Go to the start page",
                            command=lambda: controller.show_frame("StartPage"))
-        button.grid(row=0, column=9, padx=25, pady=1)
+        button.grid(row=0, column=9, padx=10, pady=1)
         # button1 = tk.Button(frame6, height=2, width=20, text='Next', command=hide)
         # button1.grid(row=0, column=8, padx=25, pady=1)
 
@@ -245,8 +255,15 @@ class PageOne(tk.Frame):
             w.config(text=text)
             show()
 
-        btn =tk.Button(frame6, text='Next', command=clicked)
-        btn.grid(row=0, column=8, padx=25, pady=1)
+        btn = tk.Button(frame6, height=2, width=20, text='Next', command=clicked)
+        btn.grid(row=0, column=8, padx=10, pady=1)
+        button_Close = tk.Button(frame6, height=2, width=20, text='Close', command=close)
+        button_Close.grid(row=0, column=10, padx=10, pady=1)
+
+
+
+# Fact from wiki / event that happen the curent day
+# ...................................................................................................................
 
 
 class PageTwo(tk.Frame):
@@ -256,6 +273,79 @@ class PageTwo(tk.Frame):
         self.controller = controller
         label = tk.Label(self, text="This is page 2", font=TITLE_FONT)
         label.pack(side="top", fill="x", pady=10)
+        frame8 = tk.Frame(self, bg='#80c1ff', bd=5)
+        frame8.place(relx=0.5, rely=0.2, relwidth=0.75, relheight=0.5, anchor='n')
+        frame9 = tk.Frame(self, bg='#80c1ff', bd=5)
+        frame9.place(relx=0.5, rely=0.85, relwidth=0.75, relheight=0.5, anchor='n')
+        button = tk.Button(self, text="Go to the start page",
+                           command=lambda: controller.show_frame("StartPage"))
+
+        button.pack()
+
+# ...................................................................
+class Page3(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        label = tk.Label(self, text="This is page 2", font=TITLE_FONT)
+        label.pack(side="top", fill="x", pady=10)
+        frame10 = tk.Frame(self, bg='#80c1ff', bd=5)
+        frame10.place(relx=0.5, rely=0.2, relwidth=0.75, relheight=0.5, anchor='n')
+        frame11 = tk.Frame(self, bg='#80c1ff', bd=5)
+        frame11.place(relx=0.5, rely=0.85, relwidth=0.75, relheight=0.5, anchor='n')
+        button = tk.Button(self, text="Go to the start page",
+                           command=lambda: controller.show_frame("StartPage"))
+
+        button.pack()
+
+# .................................................................................................
+class Page4(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        label = tk.Label(self, text="This is page 2", font=TITLE_FONT)
+        label.pack(side="top", fill="x", pady=10)
+        frame12 = tk.Frame(self, bg='#80c1ff', bd=5)
+        frame12.place(relx=0.5, rely=0.2, relwidth=0.75, relheight=0.5, anchor='n')
+        frame13 = tk.Frame(self, bg='#80c1ff', bd=5)
+        frame13.place(relx=0.5, rely=0.85, relwidth=0.75, relheight=0.5, anchor='n')
+
+        button = tk.Button(self, text="Go to the start page",
+                           command=lambda: controller.show_frame("StartPage"))
+
+        button.pack()
+
+# ...........................................................................................................................
+class Page5(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        label = tk.Label(self, text="This is page 2", font=TITLE_FONT)
+        label.pack(side="top", fill="x", pady=10)
+        frame14 = tk.Frame(self, bg='#80c1ff', bd=5)
+        frame14.place(relx=0.5, rely=0.2, relwidth=0.75, relheight=0.5, anchor='n')
+        frame15 = tk.Frame(self, bg='#80c1ff', bd=5)
+        frame15.place(relx=0.5, rely=0.85, relwidth=0.75, relheight=0.5, anchor='n')
+        button = tk.Button(self, text="Go to the start page",
+                           command=lambda: controller.show_frame("StartPage"))
+
+        button.pack()
+
+# ...................................................................................................................
+class Page6(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        label = tk.Label(self, text="This is page 2", font=TITLE_FONT)
+        label.pack(side="top", fill="x", pady=10)
+        frame16 = tk.Frame(self, bg='#80c1ff', bd=5)
+        frame16.place(relx=0.5, rely=0.2, relwidth=0.75, relheight=0.5, anchor='n')
+        frame17 = tk.Frame(self, bg='#80c1ff', bd=5)
+        frame17.place(relx=0.5, rely=0.85, relwidth=0.75, relheight=0.5, anchor='n')
         button = tk.Button(self, text="Go to the start page",
                            command=lambda: controller.show_frame("StartPage"))
 
