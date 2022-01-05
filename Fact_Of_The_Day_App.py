@@ -4,6 +4,10 @@ import re
 from time import strftime
 import requests
 import random
+import urllib.request
+import io
+import requests, json
+from PIL import Image, ImageTk
 
 TITLE_FONT = ("Helvetica", 18, "bold")
 
@@ -86,10 +90,8 @@ fEvents = open('EventsOfToday.txt', "w", encoding="utf-8")
 for line in eventLines:
     fEvents.write(line + '\n')
 
-randomLine = random.choice(eventLines)
-print("A random event from this day in history...")
-print("On " + strftime("%B %d, ") + randomLine)
-print("Done")
+for line in eventLines:
+    randomLine = random.choice(eventLines)
 
 
 def show_wiki_fact(self):
@@ -117,20 +119,21 @@ def show_wiki_fact(self):
 # Cats facts .........................................................................
 r = requests.get('https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=2')
 json_response = r.json()[0]
-text = json_response['text']
+text = "\n" + json_response['text'] + "\n"
 
 
-def show_cats_fact():
-    w = tk.Label(app, text=text)
-    w.pack()
+# def show_cats_fact():
+#     w = tk.Label(app, text=text)
+#     w.pack()
+#
+#     def clicked():
+#         r = requests.get('https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=2')
+#         json_response = r.json()[0]
+#         text = json_response['text']
+#         w.config(text=text)
+#         btn = tk.Button(app, text='Next', command=clicked)
+#         btn.pack()
 
-    def clicked():
-        r = requests.get('https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=2')
-        json_response = r.json()[0]
-        text = json_response['text']
-        w.config(text=text)
-        btn = tk.Button(app, text='Next', command=clicked)
-        btn.pack()
 
 # frame manager..........................................................
 # ........................................................................................................................
@@ -151,10 +154,10 @@ class SampleApp(tk.Tk):
         self.frames["StartPage"] = StartPage(parent=container, controller=self)
         self.frames["PageOne"] = PageOne(parent=container, controller=self)
         self.frames["PageTwo"] = PageTwo(parent=container, controller=self)
-        self.frames["Page3"] = PageTwo(parent=container, controller=self)
-        self.frames["Page4"] = PageTwo(parent=container, controller=self)
-        self.frames["Page5"] = PageTwo(parent=container, controller=self)
-        self.frames["Page6"] = PageTwo(parent=container, controller=self)
+        self.frames["Page3"] = Page3(parent=container, controller=self)
+        self.frames["Page4"] = Page4(parent=container, controller=self)
+        self.frames["Page5"] = Page5(parent=container, controller=self)
+        self.frames["Page6"] = Page6(parent=container, controller=self)
 
         self.frames["StartPage"].grid(row=0, column=0, sticky="nsew")
         self.frames["PageOne"].grid(row=0, column=0, sticky="nsew")
@@ -190,7 +193,7 @@ class StartPage(tk.Frame):
         label = tk.Label(self, text="Choose category", font=TITLE_FONT)
         label.pack(side="top", fill="x", pady=10)
 
-        button8 = tk.Button(frame4, height=4, width=15, bg='#fdb9e0', text="WIKIPEDIA",
+        button8 = tk.Button(frame4, height=4, width=15, bg='#fdb9e0', text="History",
                             command=lambda: controller.show_frame("PageTwo"))
         button8.grid(row=0, column=2, padx=25, pady=25)
 
@@ -198,11 +201,11 @@ class StartPage(tk.Frame):
                             command=lambda: controller.show_frame("PageOne"))
         button2.grid(row=0, column=3, padx=25, pady=25)
 
-        button3 = tk.Button(frame4, height=4, width=15, bg='#fdb9e0', text="ANIMALS",
+        button3 = tk.Button(frame4, height=4, width=15, bg='#fdb9e0', text="Astronomy",
                             command=lambda: controller.show_frame("Page3"))
         button3.grid(row=0, column=4, padx=25, pady=25)
 
-        button5 = tk.Button(frame4, height=4, width=15, bg='#cd9de2', text="ANIMATION",
+        button5 = tk.Button(frame4, height=4, width=15, bg='#cd9de2', text="Fun",
                             command=lambda: controller.show_frame("Page4"))
         button5.grid(row=1, column=2, padx=25, pady=25)
 
@@ -219,6 +222,7 @@ class StartPage(tk.Frame):
 
         self._canvas.pack()
 
+
 # Fact about  cats
 # ...............................................................................................................
 class PageOne(tk.Frame):
@@ -228,6 +232,9 @@ class PageOne(tk.Frame):
         self.controller = controller
         frame7 = tk.Frame(self, bg='#80c1ff', bd=5)
         frame7.place(relx=0.5, rely=0.2, relwidth=0.75, relheight=0.5, anchor='n')
+
+        frame25 = tk.Frame(frame7, bg='#80c1ff', bd=5)
+        frame25.place(relx=0.5, rely=0.5, relwidth=0.5, relheight=0.5, anchor='n')
         frame6 = tk.Frame(self, bg='#80c1ff', bd=5)
         frame6.place(relx=0.5, rely=0.85, relwidth=0.75, relheight=0.5, anchor='n')
         label = tk.Label(self, text="Cats facts", font=TITLE_FONT)
@@ -241,25 +248,43 @@ class PageOne(tk.Frame):
         # get info about cats
         r = requests.get('https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=2')
         json_response = r.json()[0]
-        text = json_response['text']
+        text = "\n" + json_response['text'] + "\n"
         # a gui for show info
-        w = tk.Label(frame7, text=text)
-        w.pack()
+        T1 = tk.Text(frame7, height=5, width=52)
+        T1.pack()
+        T1.insert(tk.END, text)
+
+        catURL = 'http://aws.random.cat/meow'
+
+        imageURL = json.loads(requests.get(catURL).content)["file"]
+
+        class WebImage:
+            def __init__(self, url):
+                with urllib.request.urlopen(url) as u:
+                    raw_data = u.read()
+                # self.image = tk.PhotoImage(data=base64.encodebytes(raw_data))
+                image = Image.open(io.BytesIO(raw_data))
+                self.image = ImageTk.PhotoImage(image)
+
+            def get(self):
+                return self.image
+
+        img = WebImage(imageURL).get()
+        panel = tk.Label(frame25, image=img)
+        panel.pack(side="bottom", fill="both", expand="no")
 
         def clicked():
-            app.withdraw()
-            time.sleep(5)
             r = requests.get('https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=2')
             json_response = r.json()[0]
-            text = json_response['text']
-            w.config(text=text)
-            show()
+            text1 = json_response['text']
+            T1.delete("1.0", "end")  # if you want to remove the old data
+            T1.insert(tk.END, text1)
+            hide()
 
         btn = tk.Button(frame6, height=2, width=20, text='Next', command=clicked)
         btn.grid(row=0, column=8, padx=10, pady=1)
         button_Close = tk.Button(frame6, height=2, width=20, text='Close', command=close)
         button_Close.grid(row=0, column=10, padx=10, pady=1)
-
 
 
 # Fact from wiki / event that happen the curent day
@@ -271,16 +296,39 @@ class PageTwo(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="This is page 2", font=TITLE_FONT)
+        label = tk.Label(self, text="A random event that happen today", font=TITLE_FONT)
         label.pack(side="top", fill="x", pady=10)
         frame8 = tk.Frame(self, bg='#80c1ff', bd=5)
         frame8.place(relx=0.5, rely=0.2, relwidth=0.75, relheight=0.5, anchor='n')
         frame9 = tk.Frame(self, bg='#80c1ff', bd=5)
         frame9.place(relx=0.5, rely=0.85, relwidth=0.75, relheight=0.5, anchor='n')
-        button = tk.Button(self, text="Go to the start page",
-                           command=lambda: controller.show_frame("StartPage"))
 
-        button.pack()
+        T = tk.Text(frame8, height=5, width=52)
+        l = tk.Label(frame8, text="Fact of the Day")
+        l.config(font=("Courier", 14))
+
+        Fact = ("A random event from this day in history On" + strftime("%B %d, ") + randomLine)
+
+        # Create button for next text.
+
+        l.pack()
+        T.pack()
+        # Insert The Fact.
+        T.insert(tk.END, Fact)
+
+        def clicked1():
+            T.delete("1.0", "end")  # if you want to remove the old data
+            Fact2 = ("A random event from this day in history On" + strftime("%B %d, ") + randomLine)
+            T.insert(tk.END, Fact2)
+
+        btn1 = tk.Button(frame9, height=2, width=20, text='Next', command=clicked1())
+        btn1.grid(row=0, column=9, padx=10, pady=1)
+        button_Close1 = tk.Button(frame9, height=2, width=20, text='Close', command=close)
+        button_Close1.grid(row=0, column=11, padx=10, pady=1)
+        buttonStart = tk.Button(frame9, height=2, width=20, text="Go to the start page",
+                                command=lambda: controller.show_frame("StartPage"))
+        buttonStart.grid(row=0, column=10, padx=10, pady=1)
+
 
 # ...................................................................
 class Page3(tk.Frame):
@@ -288,16 +336,21 @@ class Page3(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="This is page 2", font=TITLE_FONT)
+        label = tk.Label(self, text="Astronomy Facts", font=TITLE_FONT)
         label.pack(side="top", fill="x", pady=10)
         frame10 = tk.Frame(self, bg='#80c1ff', bd=5)
         frame10.place(relx=0.5, rely=0.2, relwidth=0.75, relheight=0.5, anchor='n')
         frame11 = tk.Frame(self, bg='#80c1ff', bd=5)
         frame11.place(relx=0.5, rely=0.85, relwidth=0.75, relheight=0.5, anchor='n')
-        button = tk.Button(self, text="Go to the start page",
-                           command=lambda: controller.show_frame("StartPage"))
 
-        button.pack()
+        btn2 = tk.Button(frame11, height=2, width=20, text='Next')
+        btn2.grid(row=0, column=9, padx=10, pady=1)
+        button_Close3 = tk.Button(frame11, height=2, width=20, text='Close', command=close)
+        button_Close3.grid(row=0, column=11, padx=10, pady=1)
+        buttonStart1 = tk.Button(frame11, height=2, width=20, text="Go to the start page",
+                                 command=lambda: controller.show_frame("StartPage"))
+        buttonStart1.grid(row=0, column=10, padx=10, pady=1)
+
 
 # .................................................................................................
 class Page4(tk.Frame):
@@ -305,17 +358,39 @@ class Page4(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="This is page 2", font=TITLE_FONT)
+        label = tk.Label(self, text="Random Fun Facts", font=TITLE_FONT)
         label.pack(side="top", fill="x", pady=10)
         frame12 = tk.Frame(self, bg='#80c1ff', bd=5)
         frame12.place(relx=0.5, rely=0.2, relwidth=0.75, relheight=0.5, anchor='n')
         frame13 = tk.Frame(self, bg='#80c1ff', bd=5)
         frame13.place(relx=0.5, rely=0.85, relwidth=0.75, relheight=0.5, anchor='n')
 
-        button = tk.Button(self, text="Go to the start page",
-                           command=lambda: controller.show_frame("StartPage"))
+        url = "https://uselessfacts.jsph.pl/random.json?language=en"
+        response = requests.request("GET", url)
+        data = json.loads(response.text)
+        text5 = "\n" + data['text'] + "\n"
+        # a gui for show info
+        T3 = tk.Text(frame12, height=5, width=52)
+        T3.pack()
+        T3.insert(tk.END, text5)
 
-        button.pack()
+        def clicked3():
+            url2 = "https://uselessfacts.jsph.pl/random.json?language=en"
+            response2 = requests.request("GET", url)
+            data2 = json.loads(response.text)
+            text6 = "\n" + data['text'] + "\n"
+            # a gui for show info
+            T3.delete("1.0", "end")  # if you want to remove the old data
+            T3.insert(tk.END, text6)
+
+        btn3 = tk.Button(frame13, height=2, width=20, text='Next', command=clicked3())
+        btn3.grid(row=0, column=9, padx=10, pady=1)
+        button_Close4 = tk.Button(frame13, height=2, width=20, text='Close', command=close)
+        button_Close4.grid(row=0, column=13, padx=10, pady=1)
+        buttonStart2 = tk.Button(frame13, height=2, width=20, text="Go to the start page",
+                                 command=lambda: controller.show_frame("StartPage"))
+        buttonStart2.grid(row=0, column=10, padx=10, pady=1)
+
 
 # ...........................................................................................................................
 class Page5(tk.Frame):
@@ -333,6 +408,7 @@ class Page5(tk.Frame):
                            command=lambda: controller.show_frame("StartPage"))
 
         button.pack()
+
 
 # ...................................................................................................................
 class Page6(tk.Frame):
