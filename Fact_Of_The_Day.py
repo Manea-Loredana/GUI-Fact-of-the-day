@@ -28,6 +28,12 @@ def hide():
     show()
 
 
+def hide2():
+    app.withdraw()
+    time.sleep(5)
+    show()
+
+
 # WIKIPEDIA FACT ...............................................
 
 
@@ -218,7 +224,9 @@ class StartPage(tk.Frame):
         button7.grid(row=1, column=4, padx=25, pady=25)
 
         button1 = tk.Button(frame5, height=2, width=20, text='Close', command=close)
-        button1.pack()
+        button1.grid(row=0, column=4, padx=50, pady=25)
+        button9 = tk.Button(frame5, height=2, width=20, text='Continue', command=hide)
+        button9.grid(row=0, column=5, padx=25, pady=25)
 
         self._canvas.pack()
 
@@ -279,10 +287,9 @@ class PageOne(tk.Frame):
             text1 = json_response['text']
             T1.delete("1.0", "end")  # if you want to remove the old data
             T1.insert(tk.END, text1)
-            hide()
 
-        btn = tk.Button(frame6, height=2, width=20, text='Next', command=clicked)
-        btn.grid(row=0, column=8, padx=10, pady=1)
+        # btn = tk.Button(frame6, height=2, width=20, text='Next', command=clicked)
+        # btn.grid(row=0, column=8, padx=10, pady=1)
         button_Close = tk.Button(frame6, height=2, width=20, text='Close', command=close)
         button_Close.grid(row=0, column=10, padx=10, pady=1)
 
@@ -321,8 +328,9 @@ class PageTwo(tk.Frame):
             Fact2 = ("A random event from this day in history On" + strftime("%B %d, ") + randomLine)
             T.insert(tk.END, Fact2)
 
-        btn1 = tk.Button(frame9, height=2, width=20, text='Next', command=clicked1())
-        btn1.grid(row=0, column=9, padx=10, pady=1)
+        #
+        # btn1 = tk.Button(frame9, height=2, width=20, text='Next', command=clicked1())
+        # btn1.grid(row=0, column=9, padx=10, pady=1)
         button_Close1 = tk.Button(frame9, height=2, width=20, text='Close', command=close)
         button_Close1.grid(row=0, column=11, padx=10, pady=1)
         buttonStart = tk.Button(frame9, height=2, width=20, text="Go to the start page",
@@ -352,6 +360,7 @@ class Page3(tk.Frame):
         buttonStart1.grid(row=0, column=10, padx=10, pady=1)
 
 
+# Random fun facts
 # .................................................................................................
 class Page4(tk.Frame):
 
@@ -376,15 +385,15 @@ class Page4(tk.Frame):
 
         def clicked3():
             url2 = "https://uselessfacts.jsph.pl/random.json?language=en"
-            response2 = requests.request("GET", url)
-            data2 = json.loads(response.text)
-            text6 = "\n" + data['text'] + "\n"
+            response2 = requests.request("GET", url2)
+            data2 = json.loads(response2.text)
+            text6 = "\n" + data2['text'] + "\n"
             # a gui for show info
             T3.delete("1.0", "end")  # if you want to remove the old data
             T3.insert(tk.END, text6)
 
-        btn3 = tk.Button(frame13, height=2, width=20, text='Next', command=clicked3())
-        btn3.grid(row=0, column=9, padx=10, pady=1)
+        # btn3 = tk.Button(frame13, height=2, width=20, text='Next', command=clicked3())
+        # btn3.grid(row=0, column=9, padx=10, pady=1)
         button_Close4 = tk.Button(frame13, height=2, width=20, text='Close', command=close)
         button_Close4.grid(row=0, column=13, padx=10, pady=1)
         buttonStart2 = tk.Button(frame13, height=2, width=20, text="Go to the start page",
@@ -404,10 +413,13 @@ class Page5(tk.Frame):
         frame14.place(relx=0.5, rely=0.2, relwidth=0.75, relheight=0.5, anchor='n')
         frame15 = tk.Frame(self, bg='#80c1ff', bd=5)
         frame15.place(relx=0.5, rely=0.85, relwidth=0.75, relheight=0.5, anchor='n')
-        button = tk.Button(self, text="Go to the start page",
+
+        button100 = tk.Button(frame15, text="Go to the start page",
                            command=lambda: controller.show_frame("StartPage"))
 
-        button.pack()
+        button100.grid(row=0, column=9, padx=10, pady=1)
+        button_Close33 = tk.Button(frame15, height=2, width=20, text='Close', command=close)
+        button_Close33.grid(row=0, column=10, padx=10, pady=1)
 
 
 # ...................................................................................................................
